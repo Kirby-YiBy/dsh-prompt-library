@@ -1,0 +1,24 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    name: client smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # The client half is hand-written lazy-CJS with no build step, so the test
+      # stubs the module loader, React and a cordis context and asserts the four
+      # slot registrations still line up.
+      - name: Run the offline client test
+        run: node test-client.mjs

@@ -1,5 +1,7 @@
 # dsh-prompt-library
 
+[![test](https://github.com/Kirby-YiBy/dsh-prompt-library/actions/workflows/test.yml/badge.svg)](https://github.com/Kirby-YiBy/dsh-prompt-library/actions/workflows/test.yml)
+
 **A Voyager-style workspace inside DeepSeek Harness** — prompt library, click-to-copy formulas and
 conversation folders, as one native DSH plugin.
 

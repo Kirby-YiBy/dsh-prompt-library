@@ -1,8 +1,10 @@
 // Offline smoke test for the client half: stub the loader, React and cordis ctx,
 // then run apply() and the slot injections the way the shell would.
 import fs from 'node:fs'
+import path from 'node:path'
 
-const source = fs.readFileSync('E:/DSHarness/plugins/dsh-prompt-library/client/client.js', 'utf8')
+// Resolved from this file, so the test runs from any checkout (and in CI).
+const source = fs.readFileSync(path.join(import.meta.dirname, 'client', 'client.js'), 'utf8')
 
 const registrations = []
 let loaderId = null

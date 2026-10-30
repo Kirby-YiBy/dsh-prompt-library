@@ -1,5 +1,7 @@
 # dsh-prompt-library
 
+[![test](https://github.com/Kirby-YiBy/dsh-prompt-library/actions/workflows/test.yml/badge.svg)](https://github.com/Kirby-YiBy/dsh-prompt-library/actions/workflows/test.yml)
+
 **在 DeepSeek Harness 里复刻 Voyager 的工作台** —— 提示词库、点击复制公式、会话文件夹，一个原生 DSH 插件搞定。
 
 [Gemini Voyager](https://github.com/voyager-crew/voyager) 本身是浏览器扩展。这个项目把其中可以迁移的能力，用 DSH 自己的插件 API 重做进应用里：不需要扩展、不需要另开窗口、不依赖浏览器。
