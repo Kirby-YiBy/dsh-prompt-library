@@ -1,0 +1,93 @@
+name: Bug report
+description: Something in the plugin does not behave the way the README says it should.
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Two things make a fix much faster: the exact DSH version,
+        and the plugin's own log (it records which path a write took, without any of your prompts).
+
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Which surface?
+      options:
+        - Prompt library (floating ball / panel)
+        - Quote reply (selection toolbar)
+        - Formula copy (click a formula)
+        - Conversation folders (sidebar panel)
+        - Install / boot / plugin does not appear
+    validations:
+      required: true
+
+  - type: dropdown
+    id: host
+    attributes:
+      label: Where does it run?
+      options:
+        - DSH Desktop (the Electron app)
+        - dsh web (in a browser)
+    validations:
+      required: true
+
+  - type: input
+    id: dsh-version
+    attributes:
+      label: DSH version
+      description: "`dsh --version`, or the version shown in the app."
+      placeholder: 0.2.1-rc.5
+    validations:
+      required: true
+
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin version
+      description: Shown as `v0.17.0` at the bottom of the prompt panel.
+      placeholder: 0.17.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what you got instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. open the prompt panel
+        2. type "abc" in the composer
+        3. select a sentence in the transcript and click 引用
+        4. expected: the draft keeps "abc" and gets a quoted block below it
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log excerpt
+      description: |
+        The last few lines of `~/.dsh/prompt-library-debug.log` are usually enough.
+        It records the origin of each write, the quote path and formula-copy results —
+        never your prompts or conversation text.
+      render: text
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Before submitting
+      options:
+        - label: I reloaded the window — and restarted the app if the plugin had just been installed.
+          required: true
+        - label: I searched the existing issues.
+          required: true

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and ideas
+    url: https://github.com/Kirby-YiBy/dsh-prompt-library/discussions
+    about: Anything that is not a bug report or a concrete feature request.
+  - name: Gemini Voyager — the original
+    url: https://github.com/voyager-crew/voyager
+    about: The browser extension this plugin draws its design from. Please star it.

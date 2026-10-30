@@ -1,0 +1,58 @@
+name: Feature request
+description: Suggest a behaviour, or a piece of the original extension worth porting.
+title: "[feat] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This plugin is an independent re-implementation of
+        [Gemini Voyager](https://github.com/voyager-crew/voyager) against DSH's own APIs,
+        so the most useful proposals are the ones that say **what the original does** and
+        **which DSH surface it could map onto**.
+
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Which surface would this touch?
+      options:
+        - Prompt library
+        - Quote reply
+        - Formula copy
+        - Conversation folders
+        - Something new
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does it solve?
+      description: The situation where you miss it, not the implementation you have in mind.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What should happen
+    validations:
+      required: true
+
+  - type: textarea
+    id: upstream
+    attributes:
+      label: How does Gemini Voyager do it? (optional)
+      description: A screenshot, a doc link, or the file in their repo helps a lot.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Before submitting
+      options:
+        - label: It is not already in the README's "Not ported" list (timeline, conversation export, cloud sync, slash commands).
+          required: true
+        - label: I searched the existing issues and discussions.
+          required: true
