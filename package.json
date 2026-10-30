@@ -1,0 +1,55 @@
+{
+  "name": "dsh-prompt-library",
+  "version": "0.17.0",
+  "description": "Voyager-style prompt library, formula copy and conversation folders for DeepSeek Harness — a native DSH plugin, no browser extension.",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek",
+    "deepseek-harness",
+    "prompt-library",
+    "prompts",
+    "formula-copy",
+    "folders"
+  ],
+  "homepage": "https://github.com/Kirby-YiBy/dsh-prompt-library#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kirby-YiBy/dsh-prompt-library.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Kirby-YiBy/dsh-prompt-library/issues"
+  },
+  "author": "Kirby",
+  "license": "MIT",
+  "type": "module",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "node test-client.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./client/client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  },
+  "files": [
+    "lib",
+    "client",
+    "cordis.patch.yml",
+    "README.md",
+    "README.zh.md",
+    "LICENSE"
+  ]
+}
