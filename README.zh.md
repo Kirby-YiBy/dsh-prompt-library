@@ -9,11 +9,18 @@
 
 [English](README.md) | 中文
 
+<img src="docs/formula-copy.png" width="780" alt="点击公式即可复制 LaTeX，右上角弹出确认提示">
+
+<sub>完整 33 秒演示：[dsh-prompt-library-demo.mp4](https://github.com/Kirby-YiBy/dsh-prompt-library/releases/download/v0.17.0/dsh-prompt-library-demo.mp4)</sub>
+
 ---
 
 ## 功能
 
 ### 提示词库（右下角悬浮球）
+
+![提示词面板](docs/demo-panel.gif)
+
 
 | | |
 |---|---|
@@ -32,10 +39,16 @@
 
 ### 引用回复
 
+![引用回复](docs/demo-quote.gif)
+
+
 在对话里选中任意文字，出现小工具条。点「引用」会把选区以 Markdown 引用块写进输入框：每行
 一个 `>`，前面先空一行，走 DSH 自己的草稿 API —— **不模拟按键，所以不会误发你的草稿**。
 
 ### 公式复制（点公式即可）
+
+![公式复制](docs/demo-formula.gif)
+
 
 悬停公式会高亮，点一下就把 LaTeX 复制走。
 

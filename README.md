@@ -12,11 +12,18 @@ no separate window, no browser.
 
 English | [中文](README.zh.md)
 
+<img src="docs/formula-copy.png" width="780" alt="Clicking a formula copies its LaTeX, with a confirmation toast">
+
+<sub>Full 33-second demo: [dsh-prompt-library-demo.mp4](https://github.com/Kirby-YiBy/dsh-prompt-library/releases/download/v0.17.0/dsh-prompt-library-demo.mp4)</sub>
+
 ---
 
 ## Features
 
 ### Prompt library — the floating ball
+
+![The prompt panel](docs/demo-panel.gif)
+
 
 | | |
 |---|---|
@@ -35,11 +42,17 @@ English | [中文](README.zh.md)
 
 ### Quote reply
 
+![Quote reply](docs/demo-quote.gif)
+
+
 Select text anywhere in a conversation; a small toolbar appears. **引用** appends the selection to
 the composer as a Markdown block quote — one `>` per line, with a blank line first, through DSH's own
 draft API. It never simulates a keypress, so it cannot send your draft by accident.
 
 ### Formula copy — click a formula
+
+![Formula copy](docs/demo-formula.gif)
+
 
 Hover a rendered formula and it highlights; click it and the LaTeX lands on your clipboard.
 
