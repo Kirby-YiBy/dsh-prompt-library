@@ -1,6 +1,7 @@
 # dsh-prompt-library
 
 [![test](https://github.com/Kirby-YiBy/dsh-prompt-library/actions/workflows/test.yml/badge.svg)](https://github.com/Kirby-YiBy/dsh-prompt-library/actions/workflows/test.yml)
+[![license](https://img.shields.io/github/license/Kirby-YiBy/dsh-prompt-library)](LICENSE)
 
 **A Voyager-style workspace inside DeepSeek Harness** — prompt library, click-to-copy formulas and
 conversation folders, as one native DSH plugin.
@@ -73,7 +74,10 @@ From GitHub (recommended):
 dsh plugin --profile desktop add github:Kirby-YiBy/dsh-prompt-library
 ```
 
-Then reload the app window. Use `--profile web` for a `dsh web` profile instead of Desktop.
+Then reload the app window. A plugin installed for the first time may only show up after a
+**full app restart**: DSH composes the client bundle graph at boot, so a new entry is not always
+picked up by a page refresh alone. Use `--profile web` instead of `desktop` for a `dsh web`
+profile.
 
 From a local clone (for development):
 
@@ -159,6 +163,10 @@ Voyager is much bigger than this. These stay in the extension, by design:
 - **Export conversation** — needs the session message API
 - **Starred library / cloud sync** — Voyager uses Google Drive; there is no matching OAuth here
 - **Slash `/` completion** — DSH's `/` pipeline is not open to third-party plugins
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) — every version, including the bugs fixed along the way.
 
 ## Thanks
 

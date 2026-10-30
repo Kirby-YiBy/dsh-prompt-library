@@ -1,6 +1,7 @@
 # dsh-prompt-library
 
 [![test](https://github.com/Kirby-YiBy/dsh-prompt-library/actions/workflows/test.yml/badge.svg)](https://github.com/Kirby-YiBy/dsh-prompt-library/actions/workflows/test.yml)
+[![license](https://img.shields.io/github/license/Kirby-YiBy/dsh-prompt-library)](LICENSE)
 
 **在 DeepSeek Harness 里复刻 Voyager 的工作台** —— 提示词库、点击复制公式、会话文件夹，一个原生 DSH 插件搞定。
 
@@ -69,7 +70,8 @@
 dsh plugin --profile desktop add github:Kirby-YiBy/dsh-prompt-library
 ```
 
-装完重新加载应用窗口。用 `dsh web` 的话把 `--profile desktop` 换成 `--profile web`。
+装完重新加载应用窗口。**首次安装的插件有时需要完全重启客户端才会出现** —— DSH 在启动时组装客户端
+bundle 图，只刷新页面不一定能拿到新入口。用 `dsh web` 的话把 `--profile desktop` 换成 `--profile web`。
 
 本地克隆（开发用）：
 
@@ -134,6 +136,10 @@ node test-client.mjs
 - **导出对话** —— 需要会话消息接口
 - **收藏库 / 云同步** —— 原版用 Google Drive，这里没有对应 OAuth
 - **斜杠 `/` 补全** —— DSH 的 `/` 管线不对第三方插件开放
+
+## 更新日志
+
+见 [CHANGELOG.md](CHANGELOG.md) —— 每个版本都记着，包括一路上修掉的 bug。
 
 ## 致谢
 
