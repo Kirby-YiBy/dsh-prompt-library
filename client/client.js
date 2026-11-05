@@ -11,7 +11,7 @@ window.__ModuleLoader__.load({
     const API = "/dsh-prompts/api";
     const STYLE_ID = "dsh-prompt-library-style";
     const PREFS_KEY = "dspl.prefs.v3";
-    const PLUGIN_VERSION = "0.17.0";
+    const PLUGIN_VERSION = "0.17.1";
     const BALL_SIZE = 46;
     const EDGE = 18;
     const PANEL_GAP = 10;
@@ -278,9 +278,14 @@ textarea.dspl-field { resize: vertical; min-height: 68px; max-height: 200px; }
 .dspl-var-row { display: flex; gap: 6px; align-items: center; }
 .dspl-var-row label { font-size: 11px; opacity: .7; min-width: 56px; word-break: break-all; }
 .dspl-var-row input { flex: 1; height: 26px; border-radius: 6px; padding: 0 8px; font: inherit; font-size: 12px; color: inherit; background: var(--dspl-wash); border: 1px solid var(--dspl-border); outline: none; }
-.dspl-selbar { position: fixed; transform: translateX(-50%); z-index: 2147483250; display: inline-flex; gap: 2px; padding: 3px; border-radius: 8px; background: rgba(24,24,28,.94); box-shadow: 0 6px 20px rgba(0,0,0,.28); }
-.dspl-selbtn { height: 24px; padding: 0 10px; border: none; border-radius: 6px; background: transparent; color: #fff; font-size: 12px; font-family: inherit; cursor: pointer; white-space: nowrap; }
+/* The bar is inverted against the host theme: on a dark app it is light so the
+   label stays legible, and on a light app it is dark. */
+.dspl-selbar { position: fixed; transform: translateX(-50%); z-index: 2147483250; display: inline-flex; gap: 2px; padding: 3px; border-radius: 8px; background: rgba(24,24,28,.94); color: #fff; box-shadow: 0 6px 20px rgba(0,0,0,.28); }
+.dspl-selbar[data-invert="true"] { background: rgba(252,252,250,.97); color: #16181c; box-shadow: 0 6px 20px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.08); }
+.dspl-selbtn { height: 24px; padding: 0 10px; border: none; border-radius: 6px; background: transparent; color: inherit; font-size: 12px; font-family: inherit; cursor: pointer; white-space: nowrap; }
 .dspl-selbtn:hover { background: rgba(255,255,255,.16); }
+.dspl-selbar[data-invert="true"] .dspl-selbtn:hover { background: rgba(0,0,0,.08); }
+.dspl-formula-toast[data-invert="true"] { background: rgba(252,252,250,.97); color: #16181c; box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
 
 .dspl-folders { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 16px 8px; }
 .dspl-chip { display: inline-flex; align-items: center; border-radius: 9999px; padding: 4px 10px; font: inherit; font-size: 12px; border: 1px solid var(--dspl-border); background: transparent; color: inherit; cursor: pointer; }
@@ -1206,11 +1211,55 @@ textarea.dspl-field { resize: vertical; min-height: 68px; max-height: 200px; }
 
       return h(
         "div",
-        { className: "dspl-selbar", style: { top: state.top, left: state.left } },
+        { className: "dspl-selbar", "data-invert": appIsDark() ? "true" : "false", style: { top: state.top, left: state.left } },
         note !== null
           ? h("span", { className: "dspl-selbtn", style: { cursor: "default" } }, note)
           : h("button", { className: "dspl-selbtn", onClick: quote }, "引用"),
       );
+    }
+
+    /**
+     * Whether the running app is in its dark theme.
+     *
+     * Read from the host page rather than this plugin's own theme preference:
+     * the selection toolbar sits over the host UI and has to contrast with it.
+     * `color-scheme` is the most reliable signal (the app declares it so native
+     * scrollbars and controls follow), with the perceived body background as a
+     * fallback for hosts that do not.
+     */
+    function appIsDark() {
+      try {
+        const root = document.documentElement;
+        const declared = [
+          root.getAttribute("data-theme"),
+          root.getAttribute("data-color-scheme"),
+          root.getAttribute("data-scheme"),
+          root.style.colorScheme,
+          getComputedStyle(root).colorScheme,
+          getComputedStyle(document.body).colorScheme,
+        ]
+          .filter((value) => typeof value === "string" && value !== "")
+          .join(" ");
+        if (/dark/i.test(declared) && !/light/i.test(declared)) return true;
+        if (/light/i.test(declared) && !/dark/i.test(declared)) return false;
+
+        const background =
+          getComputedStyle(document.body).backgroundColor || getComputedStyle(root).backgroundColor || "";
+        const channels = /rgba?\(([^)]+)\)/.exec(background);
+        if (channels !== null) {
+          const [r, g, b, alpha] = channels[1].split(",").map((value) => Number.parseFloat(value));
+          if (alpha === undefined || Number.isNaN(alpha) || alpha > 0.5) {
+            return 0.2126 * r + 0.7152 * g + 0.0722 * b < 140;
+          }
+        }
+      } catch {
+        // fall through to the media query
+      }
+      try {
+        return window.matchMedia("(prefers-color-scheme: dark)").matches;
+      } catch {
+        return false;
+      }
     }
 
     /** Fire-and-forget diagnostics: the host appends them to a log file. */
@@ -1892,7 +1941,15 @@ textarea.dspl-field { resize: vertical; min-height: 68px; max-height: 200px; }
 
       return toast === null
         ? null
-        : h("div", { className: "dspl-formula-toast", style: { top: toast.top, left: toast.left, transform: "translateX(-50%)" } }, toast.text);
+        : h(
+            "div",
+            {
+              className: "dspl-formula-toast",
+              "data-invert": appIsDark() ? "true" : "false",
+              style: { top: toast.top, left: toast.left, transform: "translateX(-50%)" },
+            },
+            toast.text,
+          );
     }
 
     function PromptBall() {

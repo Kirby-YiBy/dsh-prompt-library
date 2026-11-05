@@ -2,6 +2,15 @@
 
 All notable changes to this plugin. The version mirrors `package.json`.
 
+## 0.17.1 — contrast for the floating surfaces
+
+- **Fix:** the selection toolbar (`引用`) was always a dark pill with white text, which was hard to
+  read on a dark app. It now inverts against the *host* theme: light with dark text in dark mode,
+  dark with light text in light mode. The formula-copy toast follows the same rule.
+- The host theme is read from `color-scheme` first, then from the app's background luminance, then
+  from `prefers-color-scheme` — never from this plugin's own theme preference, because these
+  surfaces sit on top of the host UI rather than inside the panel.
+
 ## 0.17.0 — folder panel polish
 
 - Drag a session onto a folder chip to file it, with a drop highlight
