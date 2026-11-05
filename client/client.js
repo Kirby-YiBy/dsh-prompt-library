@@ -11,7 +11,7 @@ window.__ModuleLoader__.load({
     const API = "/dsh-prompts/api";
     const STYLE_ID = "dsh-prompt-library-style";
     const PREFS_KEY = "dspl.prefs.v3";
-    const PLUGIN_VERSION = "0.17.2";
+    const PLUGIN_VERSION = "0.17.3";
     const BALL_SIZE = 46;
     const EDGE = 18;
     const PANEL_GAP = 10;
@@ -1263,6 +1263,96 @@ textarea.dspl-field { resize: vertical; min-height: 68px; max-height: 200px; }
       }
     }
 
+    /**
+     * The live composer shell for the session the user is looking at.
+     *
+     * Resolved at call time rather than from a slot injection: the
+     * `conversation.input.dock` bridge never fires in this host, and the composer
+     * can be remounted between two quotes anyway. `uiSession.adapter.current`
+     * carries the active session id (`.value.key`), which is what `sessions.scope`
+     * and `conversation.input.for` need.
+     *
+     * @returns the shell, or a short reason string when it cannot be found.
+     */
+    function resolveComposerShell() {
+      try {
+        const ctx = runtime.ctx;
+        if (ctx === undefined || ctx === null || typeof ctx.get !== "function") return "no-ctx";
+        const sessions = ctx.get("sessions");
+
+        // Strategy 1: the adapter's current binding.
+        let sessionId = "";
+        let via = "";
+        const uiSession = ctx.get("uiSession");
+        const source = uiSession?.adapter?.current ?? uiSession?.current;
+        const value = source?.value ?? source?.getSnapshot?.();
+        const direct = value?.key ?? value?.sessionId;
+        if (typeof direct === "string" && direct !== "") {
+          sessionId = direct;
+          via = "uiSession";
+        }
+
+        // Strategy 2: the session the main view retains.
+        if (sessionId === "") {
+          const snapshot = sessions?.list?.getSnapshot?.();
+          for (const candidate of snapshot?.ids ?? []) {
+            const row = snapshot.byId?.[candidate];
+            if ((row?.retainedBy?.mainView ?? 0) > 0) {
+              sessionId = candidate;
+              via = "mainView";
+              break;
+            }
+          }
+        }
+        if (sessionId === "") return "no-current-session";
+        dsplReport("quote-session", `via=${via}`);
+
+        const actx = sessions?.scope?.(sessionId);
+        if (actx === undefined || actx === null) return "no-scope";
+        const conversation = actx.get?.("conversation");
+        if (conversation === undefined || conversation === null) return "no-conversation";
+        const shell = conversation.input?.for?.(actx);
+        if (shell === undefined || shell === null) return "no-shell";
+        return shell;
+      } catch (error) {
+        dsplReport("quote-session-failed", error && error.message ? error.message : error);
+        return "threw";
+      }
+    }
+
+    /** Paste text into the composer without touching the DOM. */
+    function insertIntoDraft(shell, text) {
+      try {
+        const actions = shell.actions;
+        // 1) the sanctioned insert-at-caret path
+        if (actions !== undefined && typeof actions.captureInsertion === "function" && typeof actions.insertText === "function") {
+          for (let attempt = 0; attempt < 2; attempt += 1) {
+            const span = actions.captureInsertion();
+            if (actions.insertText(text, span) !== false) return "insert";
+          }
+        }
+        // 2) rewrite the draft with the quote appended, which keeps what was typed
+        const draft = typeof shell.snapshot?.draft === "string" ? shell.snapshot.draft : null;
+        if (draft !== null && actions !== undefined && typeof actions.setDraft === "function") {
+          actions.setDraft(draft === "" ? text : `${draft}\n\n${text}`);
+          return "set-draft";
+        }
+        // 3) the internal editor's own append
+        const editor = shell.draftEditor ?? shell;
+        if (typeof editor?.appendDraft === "function") {
+          editor.appendDraft(text);
+          return "append";
+        }
+        if (typeof editor?.setDraft === "function") {
+          editor.setDraft(text);
+          return "editor-set-draft";
+        }
+      } catch (error) {
+        dsplReport("quote-insert-failed", error && error.message ? error.message : error);
+      }
+      return null;
+    }
+
     /** Fire-and-forget diagnostics: the host appends them to a log file. */
     function dsplReport(kind, detail) {
       try {
@@ -1301,20 +1391,30 @@ textarea.dspl-field { resize: vertical; min-height: 68px; max-height: 200px; }
      * - The composer must not lose the draft, so this only ever inserts.
      */
     function deliverQuote(quoted) {
-      // Preferred path: DSH's own draft editor. It re-renders the DOM from its
-      // model, so a direct DOM insert would be reconciled away (and has wiped a
-      // draft before). `appendDraft` splits on newlines, so the leading "\n"
-      // becomes the blank paragraph the caller asked for.
+      // One path only: the host's own draft editor. A DOM write would be
+      // reconciled away (and has wiped a draft before), and the clipboard is a
+      // last resort rather than the point of the feature.
+      const payload = `\n${quoted}`;
+      const shell = resolveComposerShell();
+      if (typeof shell === "object" && shell !== null) {
+        const method = insertIntoDraft(shell, payload);
+        if (method !== null) {
+          dsplReport("quote-path", `shell:${method}`);
+          return "inserted";
+        }
+      } else {
+        dsplReport("quote-path", `unresolved:${shell}`);
+      }
+      // Cached bridge, in case it did bind in some other host build.
       try {
         if (typeof composer.appendDraft === "function") {
-          composer.appendDraft(`\n${quoted}`);
-          dsplReport("quote-path", "draft-api");
+          composer.appendDraft(payload);
+          dsplReport("quote-path", "bridge");
           return "inserted";
         }
       } catch (error) {
         dsplReport("appendDraft-failed", error && error.message ? error.message : error);
       }
-      dsplReport("quote-path", "no-draft-api");
       if (copyText(quoted)) return "copied";
       return "failed";
     }

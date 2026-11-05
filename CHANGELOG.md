@@ -2,6 +2,17 @@
 
 All notable changes to this plugin. The version mirrors `package.json`.
 
+## 0.17.3 — quote fills the composer again
+
+- **Fix:** the quote action only copied (`已复制`) instead of writing into the composer. The
+  `conversation.input.dock` bridge that was supposed to supply `appendDraft` never fired in this
+  host, so there was no draft API to call and the code fell through to the clipboard.
+- The composer is now resolved at click time: `uiSession.adapter.current` for the active session,
+  falling back to the catalog row the main view retains, then `conversation.input.for(scope)`.
+- Insertion uses the shell's sanctioned action face — `captureInsertion()` + `insertText()` for
+  insert-at-caret — then `setDraft()` with the existing draft preserved, then the editor's own
+  `appendDraft`. The clipboard is only a last resort.
+
 ## 0.17.2 — a hairline on the inverted toolbar
 
 - The light-on-dark selection toolbar and the formula toast now carry a 1px `rgba(0,0,0,.14)`

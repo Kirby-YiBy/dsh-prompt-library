@@ -1,6 +1,6 @@
 {
   "name": "dsh-prompt-library",
-  "version": "0.17.2",
+  "version": "0.17.3",
   "description": "Voyager-style prompt library, formula copy and conversation folders for DeepSeek Harness — a native DSH plugin, no browser extension.",
   "keywords": [
     "dsh",
