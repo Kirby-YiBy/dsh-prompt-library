@@ -2,6 +2,12 @@
 
 All notable changes to this plugin. The version mirrors `package.json`.
 
+## 0.17.2 — a hairline on the inverted toolbar
+
+- The light-on-dark selection toolbar and the formula toast now carry a 1px `rgba(0,0,0,.14)`
+  border, so the pill reads as a surface on a dark background instead of a glow.
+- Both theme states reserve the same transparent border, so switching themes never shifts layout.
+
 ## 0.17.1 — contrast for the floating surfaces
 
 - **Fix:** the selection toolbar (`引用`) was always a dark pill with white text, which was hard to

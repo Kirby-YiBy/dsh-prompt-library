@@ -11,7 +11,7 @@ window.__ModuleLoader__.load({
     const API = "/dsh-prompts/api";
     const STYLE_ID = "dsh-prompt-library-style";
     const PREFS_KEY = "dspl.prefs.v3";
-    const PLUGIN_VERSION = "0.17.1";
+    const PLUGIN_VERSION = "0.17.2";
     const BALL_SIZE = 46;
     const EDGE = 18;
     const PANEL_GAP = 10;
@@ -280,12 +280,13 @@ textarea.dspl-field { resize: vertical; min-height: 68px; max-height: 200px; }
 .dspl-var-row input { flex: 1; height: 26px; border-radius: 6px; padding: 0 8px; font: inherit; font-size: 12px; color: inherit; background: var(--dspl-wash); border: 1px solid var(--dspl-border); outline: none; }
 /* The bar is inverted against the host theme: on a dark app it is light so the
    label stays legible, and on a light app it is dark. */
-.dspl-selbar { position: fixed; transform: translateX(-50%); z-index: 2147483250; display: inline-flex; gap: 2px; padding: 3px; border-radius: 8px; background: rgba(24,24,28,.94); color: #fff; box-shadow: 0 6px 20px rgba(0,0,0,.28); }
-.dspl-selbar[data-invert="true"] { background: rgba(252,252,250,.97); color: #16181c; box-shadow: 0 6px 20px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.08); }
+.dspl-selbar { position: fixed; transform: translateX(-50%); z-index: 2147483250; display: inline-flex; gap: 2px; padding: 3px; border-radius: 8px; border: 1px solid transparent; background: rgba(24,24,28,.94); color: #fff; box-shadow: 0 6px 20px rgba(0,0,0,.28); }
+.dspl-selbar[data-invert="true"] { background: rgba(252,252,250,.97); color: #16181c; border-color: rgba(0,0,0,.14); box-shadow: 0 6px 20px rgba(0,0,0,.2); }
 .dspl-selbtn { height: 24px; padding: 0 10px; border: none; border-radius: 6px; background: transparent; color: inherit; font-size: 12px; font-family: inherit; cursor: pointer; white-space: nowrap; }
 .dspl-selbtn:hover { background: rgba(255,255,255,.16); }
 .dspl-selbar[data-invert="true"] .dspl-selbtn:hover { background: rgba(0,0,0,.08); }
-.dspl-formula-toast[data-invert="true"] { background: rgba(252,252,250,.97); color: #16181c; box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
+.dspl-formula-toast { border: 1px solid transparent; }
+.dspl-formula-toast[data-invert="true"] { background: rgba(252,252,250,.97); color: #16181c; border-color: rgba(0,0,0,.14); box-shadow: none; }
 
 .dspl-folders { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 16px 8px; }
 .dspl-chip { display: inline-flex; align-items: center; border-radius: 9999px; padding: 4px 10px; font: inherit; font-size: 12px; border: 1px solid var(--dspl-border); background: transparent; color: inherit; cursor: pointer; }
